@@ -1,0 +1,27 @@
+@import '~globals.scss';
+
+.menuItem {
+    background-color: transparent;
+    color: rgb(201, 198, 207);
+    &:hover {
+        background-color: rgba(255,255,255, .35) !important;
+    }
+}
+.caption {
+    color: white;
+    font-family: $brandFont;
+    width: 3rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.selected {
+    background-color: rgba(255,255,255, .35) !important;
+}
+
+.disabled {
+    background-color: rgba(255,255,255, .35);
+    &:hover {
+        background-color: rgba(255,255,255, .35);
+    }
+}

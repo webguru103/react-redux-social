@@ -1,0 +1,26 @@
+@import '~globals.scss';
+
+.button {
+    font-family: $brandFont;
+    text-transform: none;
+    border-radius: 4px;
+}
+.flat {
+    color: white !important;
+}
+.primary{
+    background-color: $primaryColor;
+    &:hover {
+        background-color: $primaryButtonHoverColor !important;
+    }
+    &:active {
+        background-color: $primaryButtonActiveColor;
+    }
+}
+
+.neutral {
+    border: solid 1px #ACB5B8;
+    border-radius: 4px;
+    color: #ACB5B8 !important;
+    text-transform: none;
+}

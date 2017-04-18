@@ -1,0 +1,143 @@
+.sidebar {
+    height: 100%;
+    position:fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    transition: transform .3s ease-in-out, width .3s ease-in-out;
+}
+.collapsed {
+    width: 60px;
+    
+    .mainNav, .brandNav {
+        display: none;
+    }
+}
+.userMenu {
+    width: 60px;
+    .mainNav, .mainNavCollapsed {
+        display: none;
+    }
+}
+.enter {
+  left: -200px !important;
+  
+}
+
+.enter.enterActive {
+  left: 60px !important;
+  transition: left .3s ease-in-out;
+}
+
+.leave {
+  left: 60px;
+}
+
+.leave.leaveActive {
+  left: -200px;
+  transition: left .3s ease-in-out;
+}
+
+.mainNavCollapsed {
+    width: 60px;
+    position: absolute;
+    height: 100%;
+    background-color: #281D3F;
+    text-align: center;
+    
+    .activeBrand {
+        margin-top: 10px;
+    }
+}
+.iconColor {
+    color: white;
+}
+.brandContainer {
+    border-radius: 5px;
+    background-color: #E52466;
+    opacity: 0.5;
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    line-height: 32px;
+    //margin-top: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    color: white;
+    transition: all .3s ease;
+}
+.subBrandMenu {
+    width: 20px;
+    height: 20px;
+    background: #00D2AF;
+    position: absolute;
+    right: -5px;
+    border-radius: 5px;
+    bottom: -10px;
+}
+.subBrandContainer {
+    display: inline-block;
+    margin: 10px;
+    text-align: center;
+    border-radius: 5px;
+    line-height: 32px;
+    background-color: #E52466;
+    opacity: 1;
+    width: 32px;
+    height: 32px;
+    color: white;
+    transition: all .3s ease;
+}
+.brandTitle {
+    margin-left: 16px;
+    font-size: 14px;
+    float: left;
+    width: 60%;
+}
+.activeBrand {
+    composes: brandContainer;
+    opacity: 1;
+    height: 40px;
+    width: 40px;
+
+    margin-bottom: 20px;
+    line-height: 40px;
+}
+.powerpostLogoContainer {
+    margin-bottom: 20px;
+}
+
+.brandNav {
+    width: 60px;
+    position: absolute;
+    height: 100%;
+    background-color: white;
+    text-align: center;
+    z-index: 1000;
+    a {
+        &:hover {
+            text-decoration: none;
+            .brandContainer {
+                opacity: 1;
+                height: 40px;
+                width: 40px;
+                //margin-top: 15px;
+                margin-bottom: 12px;
+                line-height: 40px;
+            }
+        }
+        &:focus{
+            text-decoration: none;
+        }
+    }
+}
+
+.mainNav {
+    width: 200px;
+    position: absolute;
+    left: 60px;
+    height: 100%;
+    background-color: #281D3F;
+    color: #C9C6CF;
+    //transition: transform .3s ease-in-out, width .3s ease-in-out;
+}

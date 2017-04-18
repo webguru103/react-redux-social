@@ -1,0 +1,26 @@
+.topNav {
+    position:fixed;
+    top: 0;
+    height: 60px;
+    right: 0;
+    transition: transform .3s ease-in-out, width .3s ease-in-out;
+    box-shadow: 0 1px 5px 0 rgba(60,92,129,0.20);
+}
+
+.userTopNav {
+    width: calc(100% - 60px) !important;    
+}
+
+.full {
+    width: calc(100% - 260px);
+}
+
+.collapsed {
+    width: calc(100% - 60px);
+}
+
+.userContainer {
+    float: right;
+    line-height: 50px;
+    margin-right: 10px;
+}

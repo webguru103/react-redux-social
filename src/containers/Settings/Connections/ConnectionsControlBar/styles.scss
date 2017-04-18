@@ -1,0 +1,44 @@
+@import '~globals.scss';
+
+$border-color: #E6E6E6;
+
+.channelTypeBlock {
+  padding-left: 16px;
+}
+.verticalAlign {
+  height: 60px;
+  line-height: 60px;
+}
+
+.channelFilterBlock {
+  padding-left: 36px;
+  position: relative;
+}
+
+.channelFilterIcon {
+  top: 15px;
+  left: 12px;
+  position: absolute;
+  color: $border-color;
+}
+
+.filterBlock {
+  border: 1px solid $border-color;
+  height: 48px;
+  border-radius: 8px;
+}
+
+.mainBlock {
+  border-bottom: 1px solid $border-color;
+  padding: 20px;
+  padding-top: 0px;
+  color: $textColor;
+}
+
+.noLeftPadding {
+  padding-left: 0;
+}
+
+.noMargin {
+  margin: 0;
+}

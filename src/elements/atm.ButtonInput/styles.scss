@@ -1,0 +1,31 @@
+.bar {
+    display: none;
+}
+.input {
+    border: solid 1px #CFD8DC;
+    border-radius: 4px;
+    height: 48px;
+    padding: 0px;
+    padding-left: 10px;
+}
+.inputElement {
+    border: none;
+    width: calc(100% - 4.8rem);
+    height: 100%;
+    float: right;
+}
+
+.withIcon {
+    margin-left: 0px;
+}
+
+.icon {
+    top: 0px;
+    left: 0px;
+    float: left;
+
+}
+.hint {
+    top: 1.5rem;
+    left: 5.8rem;
+}

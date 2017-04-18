@@ -1,0 +1,15 @@
+@import '~globals.scss';
+
+.on {
+  background-color: rgba(232, 28, 100, 0.5);
+  .thumb {
+	background: #E81C64;
+  }
+  .ripple {
+  	background-color: rgba(232, 28, 100, 0.5);
+  }
+}
+
+.text {
+	color: #6F6F6F;
+}

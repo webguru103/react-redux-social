@@ -1,0 +1,83 @@
+@import '~globals.scss';
+
+$border-color: #E6E6E6;
+$block-vertical-padding: 15px;
+
+$label-primary-color: #EC0057;
+$label-secondary-color: #FFFFFF;
+
+.connectionIcon {
+  float:left;
+  margin-right: 20px;
+  i {
+    font-size: 40px;
+  }
+}
+.connectionBlock {
+  border-bottom: 1px solid $border-color;
+  padding: $block-vertical-padding 5px $block-vertical-padding 10px;
+}
+
+.connectionName {
+  padding-right: 10px;
+}
+
+.connectionType {
+  padding-left: 5px;
+}
+
+.controlBlock {
+  float: right;
+  text-align: center;
+}
+
+.removeBlock {
+  margin-left: 16px;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  outline: 0;
+}
+
+.disabledLabel, .disconnectedLabel, .enabledLabel {
+  border-radius: 8px;
+  height: 40px;
+  width: 120px;
+  padding-top: 10px;
+}
+
+.disabledLabel {
+  background-color: #AAB3B7;
+  color: $label-secondary-color;
+}
+
+.disconnectedLabel {
+  background-color: $label-secondary-color;
+  color: $label-primary-color;
+  border: 1px solid $label-primary-color;
+}
+
+.enabledLabel {
+  background-color: $label-primary-color;
+  color: $label-secondary-color;
+}
+
+.facebook {
+  color: #4867AA;
+}
+
+.linkedin {
+  color: #0177B5;
+}
+
+.pinterest {
+  color: #D50C22;
+}
+
+.twitter {
+  color: #1DA1F2;
+}
+
+.wordpress {
+  color: #464646;
+}

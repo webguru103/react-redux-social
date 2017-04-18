@@ -1,0 +1,26 @@
+.active {
+    border-bottom: 2px solid #E52466;
+    color: #4A4A4A !important;
+}
+
+.tabLinkStyle {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+    padding-bottom: 21px;
+    display: inline-block;
+    font-weight: 700;
+    padding-top: 20px;
+    font-family: 'Lato';
+    font-size: 13px;
+    color: #888888;
+    letter-spacing: 0;
+    line-height: 17px;
+    margin-left: 10px;
+    margin-right: 10px;
+    
+    &:hover, &:active {
+        color: #4A4A4A;
+        text-decoration: none;
+    }
+}

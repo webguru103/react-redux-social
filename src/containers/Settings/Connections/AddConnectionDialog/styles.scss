@@ -1,0 +1,66 @@
+@import '~globals.scss';
+
+.tabContent {
+    max-width: 500px;
+}
+
+.icon {
+    font-size: 50px;
+    float: left;
+    margin-right: 10px;
+}
+.connectionType {
+    float: left;
+    height: 50px;
+}
+.connectionName {
+    font-weight: $bold;
+    font-size: 14px;
+    line-height: 25px;
+}
+.connectionDesc {
+    font-size: 11px;
+    line-height: 15px;
+}
+.connectionTypeContainer {
+    clear: both;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 50px;
+}
+.buttonContainer {
+    float: right;
+}
+.facebook {
+  color: #4867AA;
+}
+
+.linkedin {
+  color: #0177B5;
+}
+
+.pinterest {
+  color: #D50C22;
+}
+
+.twitter {
+  color: #1DA1F2;
+}
+
+.wordpress {
+  color: #464646;
+}
+
+.google {
+  color: #d34836;
+}
+
+.submitButton {
+  color: white !important;
+  background-color: $primaryColor;
+}
+
+.cancelButton {
+  font-size: 11px !important;
+  text-decoration: underline;
+}
