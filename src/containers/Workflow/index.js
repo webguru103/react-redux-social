@@ -8,6 +8,9 @@ import React from 'react';
 import { UserCanAccount } from 'config.routes/UserRoutePermissions';
 
 class Workflow extends React.Component {
+    constructor(props) {
+        super(props);
+    }
     
     render() {
         return (
