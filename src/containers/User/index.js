@@ -114,7 +114,7 @@ class settingsUser extends Component {
       fileStoreOptions,
       uploadSuccess,
       uploadFail,
-      uploadProgress,
+      uploadProgress
     );
   }
 
