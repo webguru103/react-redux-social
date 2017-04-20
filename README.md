@@ -10,9 +10,7 @@
 
 ## How to get started
 
-First, make sure you're running node >v7.0.0 
-
-git clone the repo: `git clone https://github.com/paulshirer/powerpostfrontend.git`
+First, make sure you're running node >v7.7.4 
 
 then create your new feature branch from the **DEV branch**: `git checkout -b youBranch dev`
 
