@@ -1,0 +1,13 @@
+@import '~globals.scss';
+
+.input {
+  padding: 0;
+
+  .inputElement {
+    border: 1px solid #CFD8DC;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 14px;
+    padding: 9px 12px;
+  }
+}

@@ -24,7 +24,7 @@ module.exports = (options) => ({
       // they will be a part of our compilation either way.
       // So, no need for ExtractTextPlugin here.
       test: /\.css$/,
-      include: /node_modules/,
+      include: [/node_modules/, path.resolve(process.cwd(), 'src/lib')],
       loaders: ['style-loader', 'css-loader'],
     },
     {
@@ -75,17 +75,27 @@ module.exports = (options) => ({
       // make fetch available
       fetch: 'exports-loader?self.fetch!whatwg-fetch',
     }),
-
     // Always expose NODE_ENV to webpack, in order to use `process.env.NODE_ENV`
     // inside your code for any environment checks; UglifyJS will automatically
     // drop any unreachable code.
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        NODE_ENV: JSON.stringify('production'),
       },
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.ContextReplacementPlugin(/\.\/locale$/, 'empty-module', false, /js$/),
+    new webpack.ProvidePlugin({
+    	$: 'jquery',
+    	jQuery: 'jquery',
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      comments: false,
+      sourceMap: true,
+      minimize: false,
+    }),
+    new webpack.optimize.AggressiveMergingPlugin(),
   ]),
   resolve: {
     modules: ['src', 'node_modules'],

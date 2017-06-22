@@ -94,7 +94,7 @@ class ReduxToastr extends Component {
 
   render() {
     return (
-      <div className={cn('redux-toastr', this.props.position, this.props.className)}>
+      <div className={cn('redux-toastr', this.props.position, this.props.className)} style={{width: '350px', position: 'fixed', zIndex: '9999999', right: '15px'}}>
         {this.props.toastr.confirm &&
           <ToastrConfirm
             key={this.props.toastr.confirm.id}

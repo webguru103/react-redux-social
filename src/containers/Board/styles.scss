@@ -1,0 +1,55 @@
+.board {
+  .board-header {
+    border-bottom: 1px solid #DBDFE0;
+    height: 60px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .search-input {
+      position: relative;
+      input {
+        height: 34px;
+        width: 248px;
+        border: 1px solid #C8CED0;
+        border-radius: 4px;
+        padding: 0 15px 0 40px;
+        line-height: 34px;
+        outline: none;
+        transition: border-color 0.5s;
+        font-size: 12px;
+        &:focus {
+          border-color: #E81C64;
+        }
+      }
+      i {
+        position: absolute;
+        left: 15px;
+        width: 20px;
+        height: 16px;
+        top: 9px;
+        color: #ACB5B8;
+      }
+    }
+  }
+  .board-container {
+    padding: 26px 25px;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+  .postEditor {
+    background-color: white;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 10000;
+  }
+  &.modalOpen {
+    overflow: hidden;
+    .postEditor {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+}

@@ -1,9 +1,9 @@
 .sidebar {
-    height: 100%;
+    height: calc(100% - 60px);
     position:fixed;
     left: 0;
-    top: 0;
-    width: 260px;
+    top: 60px;
+    width: 216px;
     transition: transform .3s ease-in-out, width .3s ease-in-out;
 }
 .collapsed {
@@ -107,6 +107,14 @@
     margin-bottom: 20px;
 }
 
+
+.active {
+    background-color: #E7ECEE !important;
+    border-radius: 4px !important;
+    span {
+        color: #424647 !important;
+    }
+}
 .brandNav {
     width: 60px;
     position: absolute;
@@ -133,9 +141,9 @@
 }
 
 .mainNav {
-    width: 200px;
+    width: 216px;
     position: absolute;
-    left: 60px;
+    left: 0px;
     height: 100%;
     background-color: #281D3F;
     color: #C9C6CF;

@@ -58,7 +58,7 @@ class ConnectionsListItem extends React.Component {
             </div>
             {!this.props.subChannel &&
             <div>
-              <button className={[styles.controlBlock, styles.removeBlock].join(' ')} onClick={this.remove}>
+              <button className={[styles.controlBlock, styles.removeBlock].join(' ')} onClick={this.remove} style={{color: '#8C9497'}}>
                 <div><FontIcon value="clear"></FontIcon></div>
                 <div>Remove</div>
               </button>

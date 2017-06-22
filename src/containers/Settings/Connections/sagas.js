@@ -23,6 +23,8 @@ import {
     CREATE_SUB_CHANNELS,
     CLEAR_SUB_DATA,
     GET_WORDPRESS_BLOGS,
+    VALIDATE_CONNECTIONS,
+    VALIDATE_CONNECTIONS_SUCCESS,
 } from './constants';
 
 export function* getSocialUrls(action, dispatch) { // eslint-disable-line no-unused-vars
@@ -84,6 +86,9 @@ export function* createSubChannels(action, dispatch) { // eslint-disable-line no
   } else if (data.channel === 'linkedin') {
     apiUrl = 'create_linkedin_company';
     channelId = 'linkedin_company_id';
+  } else if (data.channel === 'googleplus') {
+    apiUrl = 'create_google_page';
+    channelId = 'google_page_id';
   } else {
     apiUrl = 'create_wordpress_blog';
     channelId = 'wordpress';
@@ -174,6 +179,23 @@ export function* fetchWordpressBlogs(action, dispatch) { // eslint-disable-line 
   }
 }
 
+export function* validateConnections(action) {
+  const accountId = action.id;
+  const data = {
+    payload: {
+      account_id: accountId,
+      status: [1, 3, 5],
+      postable: 1,
+    },
+  };
+  const params = serialize(data);
+  const result = yield call(getData, `/connection_api/connections?${params}`);
+  if (result.data.status === 'success') {
+    const connections = result.data.connections;
+    yield put({ type: VALIDATE_CONNECTIONS_SUCCESS, connections });
+  }
+}
+
 export function* setConnectionCallback(action, dispatch) { // eslint-disable-line no-unused-vars
   const currentAccount = yield select(makeSelectCurrentAccount());
   const subChannel = action.channelObject;
@@ -232,12 +254,19 @@ export function* watchWordpress() {
   yield cancel(watcher);
 }
 
+export function* getConnections() {
+  const watcher = yield takeLatest(VALIDATE_CONNECTIONS, validateConnections);
+
+  yield take(LOCATION_CHANGE);
+  yield cancel(watcher);
+}
 export default [
   connectChannel,
   removeChannel,
   connectChannelCallback,
   watchSubChannels,
   watchWordpress,
+  getConnections,
 ];
 
 const serialize = function serialize(obj, prefix) {

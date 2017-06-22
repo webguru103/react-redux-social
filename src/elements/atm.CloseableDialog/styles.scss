@@ -1,0 +1,14 @@
+@import '~globals.scss';
+
+.dialog {
+  width: auto;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.title {
+  color: #8C9496;;
+  font-size: 16px;
+  line-height: 19px;
+  font-family: $brandFont;
+}

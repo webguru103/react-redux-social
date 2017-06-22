@@ -3,12 +3,19 @@ import { MenuItem } from 'react-toolbox/lib/menu';
 
 import theme from './styles.scss';
 import sidebarTheme from './sidebarStyles.scss';
+import collapseTheme from './collapsedSidebarStyles.scss';
 
 const PPMenuItem = (props) => {
-  const { isSidebar, ...rest } = props;
-
+  const { isSidebar, isCollapsed, ...rest } = props;
+  let newTheme = theme;
+  if (isSidebar) {
+    newTheme = sidebarTheme;
+  }
+  if (isSidebar && isCollapsed) {
+    newTheme = collapseTheme;
+  }
   return (
-    <MenuItem {...rest} theme={isSidebar ? sidebarTheme : theme} />
+    <MenuItem {...rest} theme={newTheme} />
   );
 };
 

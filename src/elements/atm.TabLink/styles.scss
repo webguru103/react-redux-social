@@ -3,6 +3,10 @@
     color: #4A4A4A !important;
 }
 
+.graySelectActive {
+    background-color: #ECECEC;
+}
+
 .tabLinkStyle {
     padding-left: 10px;
     padding-right: 10px;
@@ -18,7 +22,7 @@
     line-height: 17px;
     margin-left: 10px;
     margin-right: 10px;
-    
+
     &:hover, &:active {
         color: #4A4A4A;
         text-decoration: none;

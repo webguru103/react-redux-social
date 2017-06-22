@@ -29,6 +29,7 @@ const Content = styled.div`
       font-size: 12px;
 
       .fb-link-title {
+        font-family: Georgia, serif;
         font-size: 18px;
         font-weight: 500;
         line-height: 22px;

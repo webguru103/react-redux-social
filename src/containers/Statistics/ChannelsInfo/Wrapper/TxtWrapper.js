@@ -5,6 +5,6 @@ export default styled.div`
   font-size: 13px;
   line-height: 16px;
   color: #616669;
-  padding-left: 1.4rem;
-  float: left;
+  padding-left: 20px;
+  flex: 1;
 `;

@@ -17,9 +17,19 @@ const makeSelectAccountPermissions = () => createSelector(
     (dashboard) => dashboard.getIn(['activeBrand', 'account_access', 'permissions'])
 );
 
+const makeSelectUserPermissions = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.getIn(['activeBrand', 'user_access', 'permissions'])
+);
+
 const makeSelectAccountConnections = () => createSelector(
     selectDashboard,
     (dashboard) => dashboard.getIn(['activeBrand', 'connections'])
+);
+
+const makeSelectAccountBrands = () => createSelector(
+    selectDashboard,
+    (dashboard) => dashboard.getIn(['activeBrand', 'subAccounts'])
 );
 
 export {
@@ -27,4 +37,6 @@ export {
     makeSelectCurrentAccount,
     makeSelectAccountPermissions,
     makeSelectAccountConnections,
+    makeSelectAccountBrands,
+    makeSelectUserPermissions,
 };

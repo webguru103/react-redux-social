@@ -4,11 +4,12 @@ import {
   REDEEM_TOKEN_ERROR,
 } from './constants';
 
-export function redeemToken(token) {
+export function redeemToken(token, apiKeyRequired = true) {
   return {
     type: REDEEM_TOKEN,
     payload: {
       token,
+      apiKeyRequired,
     },
   };
 }

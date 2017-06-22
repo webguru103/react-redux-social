@@ -1,419 +1,208 @@
-import React from 'react';
-import TabLink from 'elements/atm.TabLink';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-
-import { 
-    makeSelectCurrentChannel,
-    makeLodingChannel,
-} from './selectors';
+import { Link } from 'react-router';
 
 import {
-    fetchCurrentChannel,
-    fetchCurrentChannelSuccess,
-} from './actions';
-
-import ChannelLoading from '../Loading';
-
-import {
-    makeSelectAccountConnections,
+  makeSelectAccountConnections,
 } from 'containers/Main/selectors';
 
+import {
+  makeSelectCurrentChannel,
+  makeLodingChannel,
+} from './selectors';
+import {
+  fetchCurrentChannel,
+  fetchCurrentChannelSuccess,
+} from './actions';
+import MainInfo from './MainInfo';
+import ChannelLoading from '../Loading';
 import SubWrapper from './SubWrapper';
-import MainWrapper from './MainWrapper';
-import TabButton from './Wrapper/TabButton';
+import Wrapper from './MainWrapper';
+
+const engagementTabsList = {
+  twitter: ['tweets', 'retweets', 'favorites'],
+  facebook: ['posts', 'fans', 'impressions', 'likes', 'comments'],
+  pinterest: ['pins', 're-pins', 'likes', 'comments'],
+  linkedin: ['posts', 'likes', 'comments'],
+};
 
 class ChannelsInfo extends React.Component {
-    constructor(props) {
-        super(props);
+  static propTypes = {
+    activeChannel: PropTypes.any,
+    connections: PropTypes.arrayOf(
+      PropTypes.shape(),
+    ),
+    fetchChannel: PropTypes.func,
+    fetchChannelInfo: PropTypes.func,
+    params: PropTypes.shape({
+      account_id: PropTypes.string,
+      channel_id: PropTypes.string,
+    }),
+    isLoading: PropTypes.bool,
+  }
+
+  state = { subChannel: '', isMonth: false };
+
+  componentDidMount() {
+    const { params, fetchChannel } = this.props;
+    fetchChannel(params.channel_id);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { activeChannel, fetchChannel, fetchChannelInfo, params } = this.props;
+    if (nextProps.params.channel_id !== params.channel_id || nextProps.params.account_id !== params.account_id) {
+      document.getElementById('main-panel').scrollTop = 0;
+      fetchChannel(nextProps.params.channel_id);
     }
-    
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.activeChannel != this.props.activeChannel) {
-            this.props.fetchChannelInfo(nextProps.activeChannel);
-        }
+    if (nextProps.activeChannel !== activeChannel) {
+      fetchChannelInfo(nextProps.activeChannel);
+      this.setState({ subChannel: engagementTabsList[nextProps.activeChannel.getIn(['connection', 'channel'])][0] });
     }
-    
-    componentDidMount() {
-        console.log(" channel_id : " + this.props.params.channel_id);
-        this.props.fetchChannel(this.props.params.channel_id);
-    }
-    
-    getType(channel) {
-        return channel.type.split('_')[1];
-    }
-    
-    setTweetsInfo() {
-        let keys;
-        let last;
-        switch(this.props.activeChannel.connection.channel){
-            case 'pinterest':
-                const channelInfo = this.props.activeChannel.analytics.pins_by_month;
-                keys = Object.keys(channelInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ channelInfo[last].likes }</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                }
-            case 'twitter':
-                return (
-                    <div>
-                        <h4>{ this.props.activeChannel.analytics.user_stats.listed_count }</h4>
-                        <h5>Tweets</h5>
-                    </div>
-                );
-            case 'linkedin':
-                const linkedInfo = this.props.activeChannel.analytics.posts_by_month;
-                keys = Object.keys(linkedInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ linkedInfo[last].likes }</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                }
-            case 'facebook':
-                const facebookInfo = this.props.activeChannel.analytics.posts_by_month;
-                keys = Object.keys(facebookInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ facebookInfo[last].likes }</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Likes</h5>
-                        </div>
-                    );
-                }
-            default:
-                return;
-        }
-    }
-    
-    setFollowersInfo() {
-        let keys;
-        let last;
-        switch(this.props.activeChannel.connection.channel){
-            case 'pinterest':
-                const channelInfo = this.props.activeChannel.analytics.pins_by_month;
-                keys = Object.keys(channelInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ channelInfo[last].comments }</h4>
-                            <h5>Followers</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Followers</h5>
-                        </div>
-                    );
-                }
-            case 'twitter':
-                return (
-                    <div>
-                        <h4>{ this.props.activeChannel.analytics.user_stats.followers_count }</h4>
-                        <h5>Followers</h5>
-                    </div>
-                );
-            case 'linkedin':
-                const linkedInfo = this.props.activeChannel.analytics.total_followers_by_month;
-                keys = Object.keys(linkedInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ linkedInfo[last] }</h4>
-                            <h5>Followers</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Followers</h5>
-                        </div>
-                    );
-                }
-            case 'facebook':
-                const facebookInfo = this.props.activeChannel.analytics.extended.page_fans_by_month;
-                keys = Object.keys(facebookInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ facebookInfo[last] }</h4>
-                            <h5>Fans</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Fans</h5>
-                        </div>
-                    );
-                }
-            default:
-                return;
-        }
-    }
-    
-    setFollowingInfo() {
-        let keys;
-        let last;
-        switch(this.props.activeChannel.connection.channel){
-            case 'pinterest':
-                const channelInfo = this.props.activeChannel.analytics.pins_by_month;
-                keys = Object.keys(channelInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ channelInfo[last].repins }</h4>
-                            <h5>Repins</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                        <h4>0</h4>
-                        <h5>Repins</h5>
-                    </div>);
-                }
-            case 'twitter':
-                return (
-                    <div>
-                        <h4>{ this.props.activeChannel.analytics.user_stats.friends_count }</h4>
-                        <h5>Following</h5>
-                    </div>
-                );
-            case 'linkedin':
-                const linkedInfo = this.props.activeChannel.analytics.posts_by_month;
-                keys = Object.keys(linkedInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ linkedInfo[last].comments }</h4>
-                            <h5>Following</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Following</h5>
-                        </div>
-                    );
-                }
-            case 'facebook':
-                const facebookInfo = this.props.activeChannel.analytics.posts_by_month;
-                keys = Object.keys(facebookInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <div>
-                            <h4>{ facebookInfo[last].comments }</h4>
-                            <h5>Following</h5>
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            <h4>0</h4>
-                            <h5>Following</h5>
-                        </div>
-                    );
-                }
-            default:
-                return;
-        }
-    }
-    
-    setFavoritesInfo() {
-        let keys;
-        let last;
-        switch(this.props.activeChannel.connection.channel){
-            case 'pinterest':
-                const channelInfo = this.props.activeChannel.analytics.pins_by_month;
-                keys = Object.keys(channelInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>{ channelInfo[last].pin_count }</h4>
-                            <h5>Pins</h5>
-                        </th>
-                    );
-                } else {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>0</h4>
-                            <h5>Pins</h5>
-                        </th>
-                    );
-                }
-            case 'twitter':
-                return (
-                    <th className="infoWidth" >
-                        <h4>{ this.props.activeChannel.analytics.user_stats.favourites_count }</h4>
-                        <h5>Favorites</h5>
-                    </th>
-                );
-            case 'linkedin':
-                const linkedInfo = this.props.activeChannel.analytics.total_followers_by_month;
-                keys = Object.keys(linkedInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>{ linkedInfo[last].post_count }</h4>
-                            <h5>Posts</h5>
-                        </th>
-                    );
-                } else {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>0</h4>
-                            <h5>Posts</h5>
-                        </th>
-                    );
-                }
-            case 'facebook':
-                const facebookInfo = this.props.activeChannel.analytics.posts_by_month;
-                keys = Object.keys(facebookInfo);
-                last = keys[0];
-                if (last != null) {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>{ facebookInfo[last].post_count }</h4>
-                            <h5>Posts</h5>
-                        </th>
-                    );
-                } else {
-                    return (
-                        <th className="infoWidth" >
-                            <h4>0</h4>
-                            <h5>Posts</h5>
-                        </th>
-                    );
-                }
-            default:
-                return;
-        }
-    }
-    
-    renderLoading (channel) {
-        return (
-            <div>
-                <ChannelLoading channel={ channel } />
+  }
+
+  getType(channel) {
+    return channel.type.split('_')[1];
+  }
+
+  setInfo(channel) {
+    let keys;
+    let last;
+    let info;
+    const { activeChannel } = this.props;
+    const rules = {
+      pinterest: [
+        { info: 'analytics.pins_by_month', key: 'comments', label: 'Followers' },
+        { info: 'analytics.pins_by_month', key: 'pin_count', label: 'Pins' },
+        { info: 'analytics.pins_by_month', key: 'repins', label: 'Repins' },
+        { info: 'analytics.pins_by_month', key: 'likes', label: 'Likes' },
+        { info: 'analytics.pins_by_month', key: 'comments', label: 'Comments' },
+      ],
+      twitter: [
+        { info: 'analytics.user_stats.statuses_count', direct: true, label: 'Tweets' },
+        { info: 'analytics.user_stats.listed_count', direct: true, label: 'Retweets' },
+        { info: 'analytics.user_stats.followers_count', direct: true, label: 'Followers' },
+        { info: 'analytics.user_stats.friends_count', direct: true, label: 'Following' },
+        { info: 'analytics.user_stats.favorites_count', direct: true, label: 'Favorites' },
+      ],
+      linkedin: [
+        { info: 'analytics.total_followers_by_month', label: 'Followers' },
+      ],
+      facebook: [
+        { info: 'analytics.extended.page_fans_by_month', label: 'Fans' },
+      ],
+    }[channel];
+    return rules.map((rule) => {
+      if (rule) {
+        if (rule.direct) {
+          return (
+            <div className="infoWidth" key={rule.label}>
+              <h3 className="topItemValue">{(activeChannel.getIn(rule.info.split('.')) || 0).toLocaleString()}</h3>
+              <h6 className="topItemLabel">{rule.label}</h6>
             </div>
-        );
-    }
-    
-    renderMain (channel) {
+          );
+        }
+        info = activeChannel.getIn(rule.info.split('.'));
+        if (info) {
+          keys = Object.keys(info.toJS());
+          last = keys[0];
+          if (last != null) {
+            return (
+              <div className="infoWidth" key={rule.label}>
+                <h3 className="topItemValue">{((rule.key ? info.getIn([last, rule.key]) : info.get(last)) || 0).toLocaleString()}</h3>
+                <h6 className="topItemLabel">{rule.label}</h6>
+              </div>
+            );
+          }
+        }
         return (
-            <div>
-                <div className="basicInfo" >
-                    <table className="tablewidth" >
-                        <tbody>
-                            <th className={ ['borderright', 'activeWidth'].join(' ') } >
-                                <div className="connectionBlock" >
-                                    <div className= "connectionIcon">
-                                        <i className={ channel.channel_icon + ' ' + channel.channel }></i>
-                                    </div>
-                                    <div style={{ float: 'left' }}>
-                                        <div className="connectionName">
-                                            { channel.display_name }
-                                        </div>
-                                        <div className={ channel }>
-                                            { this.getType(channel)[0].toUpperCase() + this.getType(channel).slice(1) }
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
-                            <th className={ ['borderright', 'infoWidth'].join(' ') } >{ this.setTweetsInfo() }</th>
-                            <th className={ ['borderright', 'infoWidth'].join(' ') } >{ this.setFollowersInfo() }</th>
-                            <th className={ ['borderright', 'infoWidth'].join(' ') } >{ this.setFollowingInfo() }</th>
-                            { this.setFavoritesInfo() }
-                        </tbody>
-                    </table>
-                </div>
-                <div className="channelsinfo" >
-                    <h3 className="paddingleft" >Engagement</h3>
-                    <div className="infoTab" >
-                        <TabLink to={ '/account/' + this.props.params.account_id + '/statistics/' + this.props.params.channel_id + '/tweets' } label="Tweets" />
-                        <TabLink to={ '/account/' + this.props.params.account_id + '/statistics/' + this.props.params.channel_id + '/retweets'} label="Retweets" />
-                        <TabLink to={ '/account/' + this.props.params.account_id + '/statistics/' + this.props.params.channel_id + '/favorites' } label="Favorites" />
-                        <SubWrapper>
-                            <TabButton>Weekly</TabButton>
-                            <TabButton>Monthly</TabButton>
-                        </SubWrapper>
-                    </div>
-                    <div styles="mainInfo" >
-                        { this.props.children }
-                    </div>
-                </div>
-            </div>
+          <div className="infoWidth" key={rule.label}>
+            <h3 className="topItemValue">0</h3>
+            <h6 className="topItemLabel">{rule.label}</h6>
+          </div>
         );
-    }
-    
-    render() {
-        let channel;
-        this.props.connections.map((connection, index) => {
-            if(connection.connection_id == this.props.params.channel_id) {
-               channel = connection;
+      }
+      return null;
+    });
+  }
+
+  renderLoading(channel) {
+    return (
+      <div>
+        <ChannelLoading channel={channel} />
+      </div>
+    );
+  }
+
+  renderMain(channel) {
+    const engagementTabs = engagementTabsList[channel.channel];
+    if (!engagementTabs) return 'Error Fetching Data';
+    return (
+      <div>
+        <div className="basicInfo">
+          <div className={`tablewidth ${channel.channel === 'facebook' || channel.channel === 'linkedin' ? 'short' : ''}`}>
+            <div className="tbody">
+              <div className="activeWidth">
+                <div className="connectionBlock">
+                  <div className="connectionIcon">
+                    <i className={`${channel.channel_icon} ${channel.channel}`}></i>
+                  </div>
+                  <div style={{ float: 'left', textAlign: 'left' }}>
+                    <div className="connectionName">
+                      {channel.display_name}
+                    </div>
+                    <div className={channel.channel}>
+                      {this.getType(channel)[0].toUpperCase() + this.getType(channel).slice(1)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {this.setInfo(channel.channel)}
+            </div>
+          </div>
+        </div>
+        <div className="channelsinfo">
+          <h3 className="paddingleft">Engagement</h3>
+          <div className="infoTab">
+            {
+              engagementTabs.map((tab) =>
+                <Link key={tab} className={`infoTabItem ${this.state.subChannel === tab ? 'activeBorderline' : ''}`} onClick={() => this.setState({ subChannel: tab })}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</Link>,
+              )
             }
-        });
-        if(this.props.isLoading == true) {
-            return (
-                <MainWrapper>
-                    { this.renderLoading( channel ) }
-                </MainWrapper>
-            );
-        } else {
-            return (
-                <MainWrapper>
-                    { this.renderMain( channel ) }
-                </MainWrapper>
-            );
-        }
+            <SubWrapper>
+              <Link className={`infoTabItem ${this.state.isMonth ? '' : 'darken'}`} onClick={() => this.setState({ isMonth: false })}>Weekly</Link>
+              <Link className={`infoTabItem ${this.state.isMonth ? 'darken' : ''}`} onClick={() => this.setState({ isMonth: true })}>Monthly</Link>
+            </SubWrapper>
+          </div>
+          <div className="mainInfo" >
+            <MainInfo activeChannel={this.props.activeChannel} subChannel={this.state.subChannel} isMonth={this.state.isMonth} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  render() {
+    const { params, connections, isLoading } = this.props;
+    const channelId = params.channel_id;
+    let channel = {};
+    channel = connections.filter((connection) =>
+      connection.connection_id === channelId
+    )[0] || {};
+    if (isLoading === true) {
+      return (
+        <Wrapper>
+          {this.renderLoading(channel)}
+        </Wrapper>
+      );
     }
+    return (
+      <Wrapper>
+        {this.renderMain(channel)}
+      </Wrapper>
+    );
+  }
 }
-ChannelsInfo.propTypes = {
-    children: React.PropTypes.node,
-};
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -423,9 +212,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-    activeChannel: makeSelectCurrentChannel(),
-    isLoading: makeLodingChannel(),
-    connections: makeSelectAccountConnections(),
+  activeChannel: makeSelectCurrentChannel(),
+  isLoading: makeLodingChannel(),
+  connections: makeSelectAccountConnections(),
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(ChannelsInfo));

@@ -5,8 +5,8 @@ import TopNav from './TopNav';
 
 const Nav = (props) => (
   <div>
-    <Sidebar {...props} />
     <TopNav {...props} />
+    <Sidebar {...props} />
   </div>
 );
 

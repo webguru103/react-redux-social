@@ -2,29 +2,52 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>PowerPost Client</title></title>
+    <title>PowerPost Digital</title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
+    <link rel="icon" href="https://www.powerpost.digital/wp-content/uploads/2016/10/PP_Favicon.png" sizes="32x32" />
+    <link rel="icon" href="https://www.powerpost.digital/wp-content/uploads/2016/10/PP_Favicon.png" sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="https://www.powerpost.digital/wp-content/uploads/2016/10/PP_Favicon.png" />
+    <meta name="msapplication-TileImage" content="https://www.powerpost.digital/wp-content/uploads/2016/10/PP_Favicon.png" />
+    <meta name="robots" content="noindex">
     <!-- Import Bootstrap CSS from CDN for easy replacement/removal -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    
-    <link href="https://diegoddox.github.io/react-redux-toastr/4.4/react-redux-toastr.min.css" rel="stylesheet" type="text/css">
+
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+      rel="stylesheet">   
   </head>
   
   <body>
     <div id="app"></div>
   </body>
 
- 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>    
+  <!--  <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+  -->
   <!-- Import Bootstrap JS from CDN for easy replacement/removal -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-      <!-- Import bundled JavaScript -->
-  <script src="/bundle.js"></script>
+  <!-- Start of Async Drift Code -->
+<script>
+  !function() {
+    var t;
+    if (t = window.driftt = window.drift = window.driftt || [], !t.init) return t.invoked ? void (window.console && console.error && console.error("Drift snippet included twice.")) : (t.invoked = !0, 
+    t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+    t.factory = function(e) {
+    return function()
+    { var n; return n = Array.prototype.slice.call(arguments), n.unshift(e), t.push(n), t; }
+    ;
+    }, t.methods.forEach(function(e)
+    { t[e] = t.factory(e); }
+    ), t.load = function(t)
+    { var e, n, o, i; e = 3e5, i = Math.ceil(new Date() / e) * e, o = document.createElement("script"), o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + i + "/" + t + ".js", n = document.getElementsByTagName("script")[0], n.parentNode.insertBefore(o, n); }
+    );
+    }();
+  drift.SNIPPET_VERSION = '0.3.1';
+  drift.load('uaz5v2ywhaku');
+</script>
+<!-- End of Async Drift Code -->
 </html>

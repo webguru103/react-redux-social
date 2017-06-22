@@ -1,66 +1,38 @@
-/*
- * Login View
- *
- * 
- */
-
 import React, { PropTypes } from 'react';
-import {connect} from 'react-redux';
 
-import {loginRequest} from 'containers/App/actions';
+import LeftPane from 'components/LeftPane';
+import RightPane from 'components/RightPane';
+import imgLogo from 'assets/images/logo.png';
 
+import Wrapper from './Wrapper';
+import Topbar from './Topbar';
+import FormWrapper from './FormWrapper';
 
-import PPInput from 'elements/atm.Input';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import { Link } from 'react-router';
+const Login = ({ children }) => (
+  <Wrapper>
+    <LeftPane signup={false}>
+      <img src={imgLogo} alt="Logo" />
+      <div style={{ position: 'absolute', left: 0, bottom: '80px' }}>
+        <div style={{ fontSize: '2rem' }}>Power Your Knowledge</div>
+        <div style={{ marginTop: '10px', fontSize: '3.5rem', lineHeight: 1.1 }}>3 Ways to User a GoPro for Content Creation</div>
+        <div style={{ marginTop: '15px', fontSize: '1.5rem' }}>
+          Want to learn how it can work for you, too?
+          <br /><br />
+          Read this article
+        </div>
+      </div>
+    </LeftPane>
+    <RightPane>
+      <Topbar />
+      <FormWrapper>
+        { children }
+      </FormWrapper>
+    </RightPane>
+  </Wrapper>
+);
 
-import { push } from 'react-router-redux';
+Login.propTypes = {
+  children: PropTypes.node,
+};
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            emailValue: '',
-            passwordValue: '',
-        };
-
-        this.changeEmail = this.changeEmail.bind(this);
-        this.changePassword = this.changePassword.bind(this);
-    }
-
-    changeEmail(value) {
-
-        this.setState({ emailValue: value});
-    }
-    
-    changePassword(value) {
-        this.setState({ passwordValue: value});
-    }
-    
-    render() {
-        return (
-            <div>
-                <h4>Login</h4>
-                <Link to="/signup">Register</Link>
-                <PPInput type="text" label="Email" value={ this.state.emailValue } onChange={ this.changeEmail } />
-                <PPInput type="password" label="Password" value={ this.state.passwordValue } onChange={ this.changePassword } />
-                
-                <PPRaisedButton label="Login" primary={ true } onClick={ () => this.props.login(this.state.emailValue, this.state.passwordValue) } />
-            </div>
-        );
-    }
-}
-
-export function mapDispatchToProps(dispatch) {
-  return {
-    login: (email, password) => dispatch(loginRequest({email, password})),
-  };
-}
-
-function mapStateToProps(state) {
-    return {
-        //authError: state.auth.error
-    };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

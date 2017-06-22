@@ -1,0 +1,49 @@
+.postSets {
+  padding: 12px;
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+  .overlay {
+    content: ' ';
+    position: absolute;
+    pointer-events: none;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 255, 0, 0.1);
+    opacity: 0;
+    &.active {
+      opacity: 0.3;
+      border: 1px dashed black;
+    }
+  }
+}
+
+.postSet {
+  margin-bottom: 8px;
+}
+
+.heading {
+  margin-bottom: 20px;
+}
+
+.status {
+  line-height: 22px;
+  font-size: 18px;
+  color: #6F6F6F;
+  vertical-align: middle;
+}
+
+.postSetsCount {
+  text-align: center;
+  line-height: 20px;
+  min-width: 20px;
+  padding: 0 3px;
+  height: 20px;
+  border-radius: 3px;
+  color: white;
+  display: inline-block;
+  margin-left: 16px;
+  vertical-align: middle;
+}

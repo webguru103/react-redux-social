@@ -4,15 +4,10 @@
 import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import filepicker from 'filepicker-js';
-import Avatar from 'elements/atm.Avatar';
-import FlatButton from 'material-ui/FlatButton';
 import PPTextField from 'elements/atm.TextField';
-import PPRaisedButton from 'elements/atm.RaisedButton';
-import {
-  RadioGroup,
-  RadioButton,
-} from 'react-toolbox/lib/radio';
+import PPButton from 'elements/atm.Button';
+import PPAvatar from 'elements/atm.Avatar';
+import PPRadioButton from 'elements/atm.RadioButton';
 
 import { updateRequest } from 'containers/App/actions';
 import {
@@ -20,7 +15,10 @@ import {
   makeSelectUserAccount,
   makeSelectFilePickerKey,
 } from 'containers/App/selectors';
-import styles from './styles.scss';
+
+import Wrapper from './Wrapper';
+import Content from './content';
+import Header from './Header';
 
 class settingsUser extends Component {
   static propTypes = {
@@ -33,11 +31,13 @@ class settingsUser extends Component {
   constructor(props) {
     super(props);
 
-    this.openFilePicker = this.openFilePicker.bind(this);
+    this.getAvatarandColor = this.getAvatarandColor.bind(this);
     this.profileUpdate = this.profileUpdate.bind(this);
+    this.notificationUpdate = this.notificationUpdate.bind(this);
     this.passwordUpdate = this.passwordUpdate.bind(this);
     this.onRadioNotify = this.onRadioNotify.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.passwordChange = this.passwordChange.bind(this);
 
     const user = this.props.user || null;
     const userProperties = (user && user.properties) || null;
@@ -52,6 +52,7 @@ class settingsUser extends Component {
 
       dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
       emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
+      color: (userProperties && userProperties.color) || '',
 
       title: (userOwnAccount && userOwnAccount.title) || '',
       phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
@@ -59,63 +60,58 @@ class settingsUser extends Component {
       newPW: '',
       confirmNewPW: '',
       confirmPWError: '',
+      user: user || null,
+      userOwnAccount: userOwnAccount || null,
     };
   }
 
-  onRadioNotify(value) {
+  componentWillReceiveProps(nextProps) {
+    let user = this.state.user;
+    let userOwnAccount = this.state.userOwnAccount;
+    if (user !== nextProps.user) {
+      user = nextProps.user ? nextProps.user : user;
+    }
+
+    if (userOwnAccount !== nextProps.userOwnAccount) {
+      userOwnAccount = nextProps.userOwnAccount ? nextProps.userOwnAccount : userOwnAccount;
+    }
+
+    const userProperties = (user && user.properties) || null;
+    const userOwnAccountProperties = (userOwnAccount && userOwnAccount.properties) || null;
+
+    this.setState({
+      avatar: (userProperties && userProperties.thumb_url) || '',
+      avatarKey: '',
+      email: user.email || '',
+      name: user.display_name || '',
+
+      dailySnapshot: (userProperties && userProperties.daily_snapshot) || false,
+      emailNotifications: (userProperties && userProperties.receive_notifications) || 'none',
+      color: (userProperties && userProperties.color) || '',
+
+      title: (userOwnAccount && userOwnAccount.title) || '',
+      phoneNumber: (userOwnAccountProperties && userOwnAccountProperties.phone_number) || '',
+
+      newPW: '',
+      confirmNewPW: '',
+      confirmPWError: '',
+      user: user || null,
+      userOwnAccount: userOwnAccount || null,
+    });
+  }
+
+  onRadioNotify(event) {
+    const value = event.target.value;
     this.setState({
       emailNotifications: value,
     });
   }
 
-  openFilePicker() {
+  getAvatarandColor(uploadedAvatar, BKColor) {
     this.setState({
-      open: false,
+      avatarKey: uploadedAvatar,
+      color: BKColor,
     });
-
-    const tthis = this;
-    filepicker.setKey(this.props.filePickerKey);
-
-    const filePickerOptions = {
-      cropRatio: 1 / 1,
-      buttonText: 'Choose',
-      container: 'modal',
-      multiple: false,
-      maxFiles: 1,
-      imageQuality: 80,
-      imageMax: [1200, 1200],
-      services: ['CONVERT', 'COMPUTER', 'WEBCAM', 'IMAGE_SEARCH', 'FLICKR', 'GOOGLE_DRIVE', 'FACEBOOK', 'INSTAGRAM', 'BOX', 'SKYDRIVE', 'URL'],
-      conversions: ['crop', 'filter'],
-    };
-
-    const fileStoreOptions = {
-      location: 'S3',
-    };
-
-    const uploadSuccess = function (Blobs) {
-      tthis.setState({
-        avatar: Blobs[0].url,
-        avatarKey: Blobs[0].key,
-      });
-    };
-
-    const uploadFail = function () {
-      tthis.setState({
-        avatarKey: '',
-      });
-    };
-
-    const uploadProgress = function (progress) {
-      console.log(JSON.stringify(progress));
-    };
-
-    filepicker.pickAndStore(
-      filePickerOptions,
-      fileStoreOptions,
-      uploadSuccess,
-      uploadFail,
-      uploadProgress
-    );
   }
 
   profileUpdate(event) {
@@ -123,10 +119,22 @@ class settingsUser extends Component {
 
     const data = {
       avatarKey: this.state.avatarKey,
+      color: this.state.color,
       name: this.state.name,
       title: this.state.title,
       email: this.state.email,
       phoneNumber: this.state.phoneNumber,
+      newPW: '*****',
+      accountID: this.props.userOwnAccount.account_id,
+    };
+
+    this.props.update(data);
+  }
+
+  notificationUpdate(event) {
+    event.preventDefault();
+
+    const data = {
       emailNotifications: this.state.emailNotifications,
       newPW: '*****',
       accountID: this.props.userOwnAccount.account_id,
@@ -138,24 +146,11 @@ class settingsUser extends Component {
   passwordUpdate(event) {
     event.preventDefault();
 
-    if (this.state.newPW !== this.state.confirmNewPW) {
-      this.setState({
-        confirmPWError: 'Password does not match the confirm password.',
-      });
-    } else if (this.state.confirmNewPW.length >= 6 && this.state.confirmNewPW.length <= 45) {
-      this.setState({
-        confirmPWError: '',
-      });
-      const data = {
-        accountID: this.props.userOwnAccount.account_id,
-        newPW: this.state.newPW,
-      };
-      this.props.update(data);
-    } else {
-      this.setState({
-        confirmPWError: 'Password must be between 6 and 45 characters',
-      });
-    }
+    const data = {
+      accountID: this.props.userOwnAccount.account_id,
+      newPW: this.state.newPW,
+    };
+    this.props.update(data);
   }
 
   handleChange(event) {
@@ -166,49 +161,72 @@ class settingsUser extends Component {
     });
   }
 
-  render() {
-    const inline = {
-      avatar: {
-        position: 'relative',
-        top: '-25px',
-      },
-      avatarImg: {
-        left: '0px',
-        width: '180px',
-        height: '180px',
-        borderRadius: '0',
-      },
-    };
+  passwordChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
+    switch (name) {
+      case 'newPW':
+        this.setState({
+          newPW: value,
+        });
+        if (value !== this.state.confirmNewPW) {
+          this.setState({
+            confirmPWError: 'Password does not match with the confirm password.',
+          });
+        } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
+          this.setState({
+            confirmPWError: '',
+          });
+        } else {
+          this.setState({
+            confirmPWError: 'Password must be between 6 and 45 characters',
+          });
+        }
+        break;
+      case 'confirmNewPW':
+        this.setState({
+          confirmNewPW: value,
+        });
+        if (value !== this.state.newPW) {
+          this.setState({
+            confirmPWError: 'Password does not match with the confirm password.',
+          });
+        } else if ((value.length >= 6 && value.length <= 45) || value.length === 0) {
+          this.setState({
+            confirmPWError: '',
+          });
+        } else {
+          this.setState({
+            confirmPWError: 'Password must be between 6 and 45 characters',
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  render() {
     return (
-      <div className="container" style={styles}>
-        <form onSubmit={this.profileUpdate}>
-          <row>
-            <div className="col-md-12">
-              <h3>Profile</h3>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h5 style={{ marginLeft: '0px', color: '#9d9d9d' }}>Profile Picture</h5>
-              <br />
-              <div style={inline.avatar}>
-                <Avatar
+      <Wrapper>
+        <div className="container">
+          <Header>Profile</Header>
+          <form onSubmit={this.profileUpdate}>
+            <Content>
+              <div className="head">
+                <PPAvatar
+                  size={180}
+                  header="Profile Picture"
                   image={this.state.avatar}
-                  style={inline.avatarImg}
-                  theme={styles}
-                  onClick={this.openFilePicker}
-                />
-                <FlatButton
-                  label="Update Photo"
-                  className={styles.updateAvatar}
-                  onClick={this.openFilePicker}
+                  title={this.state.name}
+                  backgroundColor={this.state.color}
+                  filePickerKey={this.props.filePickerKey}
+                  getAvatarandColor={this.getAvatarandColor}
                 />
               </div>
-            </div>
-            <div className="col-md-9">
-              <row>
-                <div className="col-md-6">
+              <div className="body">
+                <div className="col">
                   <PPTextField
                     type="text"
                     name="name"
@@ -216,10 +234,8 @@ class settingsUser extends Component {
                     maxLength={200}
                     value={this.state.name}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                     required
                   />
-                  <br />
                   <PPTextField
                     type="text"
                     name="title"
@@ -227,19 +243,16 @@ class settingsUser extends Component {
                     maxLength={100}
                     value={this.state.title}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col">
                   <PPTextField
                     type="email"
                     name="email"
                     floatingLabelText="Email"
                     value={this.state.email}
-                    onChange={this.handleChange}
-                    style={{ margin: 0 }}
+                    disabled
                   />
-                  <br />
                   <PPTextField
                     type="tel"
                     name="phoneNumber"
@@ -247,111 +260,102 @@ class settingsUser extends Component {
                     maxLength={100}
                     value={this.state.phoneNumber}
                     onChange={this.handleChange}
-                    style={{ margin: 0 }}
                   />
                 </div>
-              </row>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <hr />
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <h3>Email Notifications</h3>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h4>Frequency</h4>
-              <p>Send me email notifications:</p>
-            </div>
-            <div className="col-md-9">
-              <RadioGroup name="digest" onChange={this.onRadioNotify} value={this.state.emailNotifications}>
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="none"
-                  label="None"
+              </div>
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  primary={!false}
                 />
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="hourly_digest"
-                  label="Hourly"
+              </div>
+            </Content>
+          </form>
+          <form onSubmit={this.notificationUpdate}>
+            <Content>
+              <h3 style={{ paddingLeft: 10, fontWeight: 900 }}>Email Notifications</h3>
+              <div className="head">
+                <h5>Frequency</h5>
+                <p>Send me email notifications:</p>
+              </div>
+              <div className="body">
+                <div className="radio-group">
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="none"
+                    label="None"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications === 'none'}
+                  />
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="hourly_digest"
+                    label="Hourly"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications === 'hourly_digest'}
+                  />
+                  <PPRadioButton
+                    className="email-radio"
+                    name="digest"
+                    value="daily_digest"
+                    label="Daily"
+                    onChange={this.onRadioNotify}
+                    checked={this.state.emailNotifications === 'daily_digest'}
+                  />
+                </div>
+              </div>
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  primary={!false}
                 />
-                <RadioButton
-                  theme={styles}
-                  className={styles.radioButton}
-                  value="daily_digest"
-                  label="Daily"
-                />
-              </RadioGroup>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <PPRaisedButton
-                type="submit"
-                label="Save"
-                primary={!false}
-                className={styles.submit}
-              />
-            </div>
-          </row>
-        </form>
-        <form onSubmit={this.passwordUpdate}>
-          <row>
-            <div className="col-md-12">
-              <hr />
-            </div>
-          </row>
-          <row>
-            <div className="col-md-3">
-              <h3>Security</h3>
-            </div>
-            <div className="col-md-9">
-              <row>
-                <div className="col-md-6">
+              </div>
+            </Content>
+          </form>
+          <form onSubmit={this.passwordUpdate}>
+            <Content last>
+              <div className="head">
+                <h3>Security</h3>
+              </div>
+              <div className="body">
+                <div className="col">
                   <PPTextField
                     type="password"
                     name="newPW"
                     floatingLabelText="New Password"
                     maxLength={45}
                     value={this.state.newPW}
-                    onChange={this.handleChange}
-                    style={{ margin: 0 }}
+                    onChange={this.passwordChange}
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col">
                   <PPTextField
                     type="password"
                     name="confirmNewPW"
                     floatingLabelText="Confirm New Password"
                     maxLength={45}
                     value={this.state.confirmNewPW}
-                    onChange={this.handleChange}
-                    style={{ margin: 0 }}
+                    onChange={this.passwordChange}
                     errorText={this.state.confirmPWError}
                   />
                 </div>
-              </row>
-            </div>
-          </row>
-          <row>
-            <div className="col-md-12">
-              <PPRaisedButton
-                type="submit"
-                label="Save"
-                primary={!false}
-                className={styles.submit}
-              />
-            </div>
-          </row>
-        </form>
-      </div>
+              </div>
+              <div className="foot">
+                <PPButton
+                  type="submit"
+                  label="Save"
+                  disabled={!!this.state.confirmPWError || !this.state.newPW}
+                  primary={!false}
+                />
+              </div>
+            </Content>
+          </form>
+        </div>
+      </Wrapper>
     );
   }
 }
@@ -369,3 +373,4 @@ const mapStateToProps = createStructuredSelector({
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(settingsUser));
+

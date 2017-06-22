@@ -1,0 +1,44 @@
+.tabLinkStyle {
+    display: inline-block;
+    padding: 9px 32px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: Lato;
+    line-height: 15px;
+    color: #8C9496;
+    text-decoration: none !important;
+    border-bottom: 1px solid #dbdfe0;
+
+    &:hover, &:active {
+        color: #424647;
+    }
+}
+
+.active {
+    border-top: 2px solid #E81C64;
+    border-left: 1px solid #DBDFE0;
+    border-right: 1px solid #DBDFE0;
+    border-bottom: 1px solid transparent !important;
+    color: #424647 !important;
+
+    .countStyle {
+        display: none;
+    }
+}
+
+.graySelectActive {
+    background-color: #ECECEC;
+}
+
+.countStyle {
+    line-height: 13px;
+    vertical-align: top;
+    padding: 0 4px;
+    display: inline-block;
+    margin-left: 6px;
+    border: 1px solid #ACB5B8;
+    border-radius: 2px;
+    color: #8C9496;
+    text-align: center;
+    font-size: 9px;
+}

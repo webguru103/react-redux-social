@@ -4,15 +4,15 @@ const Header = styled.div`
   font-size: 13px;
   color: #657786;
 
+  a .tw-header-name:hover {
+    color: #0084B4;
+  }
+
   .tw-header-name {
     margin-right: 4px;
     font-size: 14px;
     font-weight: bold;
     color: #14171a;
-
-    &:hover {
-      color: #0084B4;
-    }
   }
   .tw-header-dot {
     margin-left: 4px;

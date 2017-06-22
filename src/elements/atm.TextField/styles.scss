@@ -32,12 +32,17 @@
 
 .labelStyles {
     margin-left: 2px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .rightLabelStyles {
     position: absolute;
     top: 0;
     right: 0;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 12px;
 }
 
 .inputContainer {

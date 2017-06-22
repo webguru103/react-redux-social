@@ -102,8 +102,10 @@ class Feed extends Component {
   renderFeedBlocks = () => {
     const { feed, connection } = this.props;
 
-    if (!feed || feed.length === 0) {
+    if (feed === null) {
       return <img className="feed-loading" src={loadingImage} alt="Loading..." />;
+    } else if (Array.isArray(feed) && feed.length === 0) {
+      return <div className="feed-description">No posts available</div>;
     }
 
     return (

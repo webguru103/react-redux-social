@@ -4,15 +4,19 @@
 .input {
     border: solid 1px #CFD8DC;
     border-radius: 4px;
-    height: 48px;
+    height: 32px;
     padding: 0px;
     padding-left: 10px;
 }
+
 .inputElement {
     border: none;
-    width: calc(100% - 4.8rem);
+    width: calc(100% - 32px);
     height: 100%;
     float: right;
+    font-size: 11px;
+    padding: 0.4rem 0;
+    color: #888888 !important;
 }
 
 .withIcon {
@@ -23,9 +27,16 @@
     top: 0px;
     left: 0px;
     float: left;
+    width: 32px;
+    height: 32px;
+    color: #888888;
+    line-height: 32px !important;
+    font-size: 18px !important;
 
 }
 .hint {
-    top: 1.5rem;
+    top: 10px;
     left: 5.8rem;
+    font-size: 11px !important;
+    color: #888888;
 }

@@ -1,0 +1,45 @@
+.input {
+  padding: 0;
+
+  &.disabled > .inputElement {
+    border-bottom-style: none;
+  }
+}
+
+.inputElement {
+  font-size: 13px;
+  line-height: 18px;
+  color: #616669;
+  font-family: Lato;
+  border-bottom: none;
+  padding: 16px;
+  min-height: 92px;
+  max-width: 450px;
+
+  .hasBorder & {
+    border-radius: 4px;
+    border: 1px solid #CFD8DC !important;
+  }
+  .noPadding & {
+    padding: 0;
+  }
+  .highlightFocus &:focus {
+    border: 1px solid #4d90fe !important;
+    box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.1);
+    outline: none;
+  }
+  border-radius: 0 0 4px 4px;
+  resize: none;
+}
+
+.hint {
+  font-size: 13px;
+  font-family: Lato;
+  color: #ACB5B8;
+  top: 17px;
+  left: 18px;
+}
+
+.bar {
+  display: none;
+}

@@ -15,7 +15,7 @@ const initialState = fromJS({
 function feedReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_SOCIAL_FEED:
-      return state.set('feed', []);
+      return state.set('feed', null);
     case SET_SOCIAL_FEED:
       return state.set('feed', action.feed);
     case SET_CONNECTION:

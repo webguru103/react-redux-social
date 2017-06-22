@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import ReactLoading from 'react-loading';
 
-import styles from './styles.scss';
+import theme from 'theme';
 
-export default function Loading() {
-  return (
-    <div className={styles.loadingOverlay}>
-      <h1>Loading...</h1>
-    </div>
-  );
-}
+import Wrapper from './Wrapper';
+
+const Loading = ({ type, color }) => (
+  <Wrapper>
+    <ReactLoading type={type || 'spin'} color={color || theme.primaryColor} />
+  </Wrapper>
+);
+
+Loading.propTypes = {
+  type: PropTypes.string,
+  color: PropTypes.string,
+};
+
+Loading.defaultProps = {
+  type: '',
+  color: '',
+};
+
+export default Loading;

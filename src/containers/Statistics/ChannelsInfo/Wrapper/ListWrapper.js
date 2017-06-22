@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  height: 100px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  height: 115px;
+  padding: 17px;
   border-top: 1px solid #dddddd;
   margin: auto;
+  display: flex;
+  flex-direction: row;
 `;

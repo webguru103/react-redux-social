@@ -20,7 +20,11 @@ import auth from 'utils/auth';
 
 // import sanitize css
 // import 'sanitize.css/sanitize.css';
-// import 'react-redux-toastr/src/styles/index.scss';
+
+// import './react-redux-toastr/src/styles/index.scss';
+import './lib/react-toggle/styles.css';
+//import './lib/react-redux-toastr/src/styles/index.scss';
+import './globals.scss';
 
 import configureStore from './config.redux/store';
 import ReduxToastr from './lib/react-redux-toastr';
@@ -41,6 +45,20 @@ const history = syncHistoryWithStore(historyObj, store, {
 
 const rootRoute = createRoutes(store, auth);
 
+/* eslint-disable no-console */
+/* eslint-disable prefer-template */
+// This is for disabling the console warning due to a known issue of React
+console.error = (() => {
+  const error = console.error;
+  return (exception, ...args) => {
+    if ((exception + '').indexOf('Warning: A component is `contentEditable`') !== 0) {
+      error.apply(console, args);
+    }
+  };
+})();
+/* eslint-enable no-console */
+/* eslint-enable prefer-template */
+
 ReactDOM.render(
   <MuiThemeProvider>
     <ThemeProvider theme={PPTheme}>
@@ -54,7 +72,7 @@ ReactDOM.render(
                 applyRouterMiddleware(useScroll())
             }
           />
-          <ReduxToastr />
+          <ReduxToastr position="top-right" timeOut={30000} preventDuplicates />
         </div>
       </Provider>
     </ThemeProvider>

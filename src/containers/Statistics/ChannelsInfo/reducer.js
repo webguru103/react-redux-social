@@ -5,20 +5,19 @@ import {
     FETCH_CHANNEL,
     FETCH_CHANNEL_SUCCESS,
     FETCH_CHANNEL_ERR,
-    FETCH_CHANNEL_CONNECTION,
     IS_WEEKLY_ANALYTICS,
     IS_MONTHLY_ANALYTICS,
 } from './constants';
 
-let initialState = fromJS({
-    channelId: '',
-    activeChannel: {},
-    isFetchingChannel: true,
-    isFetchingErr: false,
-    isWeeklyInfo: true,
+const initialState = fromJS({
+  channelId: '',
+  activeChannel: {},
+  isFetchingChannel: true,
+  isFetchingErr: false,
+  isWeeklyInfo: true,
 });
 
-function channelsReducer (state = initialState, action) {
+function channelsReducer(state = initialState, action) {
   switch (action.type) {
     case IS_LOADING_CHANNEL:
       return state
@@ -31,7 +30,7 @@ function channelsReducer (state = initialState, action) {
       return state
             .set('isFetchingChannel', false)
             .set('isFetchingErr', false)
-            .set('activeChannel', action.channelInfo);
+            .set('activeChannel', fromJS(action.channelInfo));
     case FETCH_CHANNEL_ERR:
       return state
             .set('isFetchingChannel', false)

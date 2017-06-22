@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 
 import Wrapper from './Wrapper';
-import imgBackground from './signup_bg.png';
+import imgLogin from './login_bg.png';
+import imgSignup from './signup_bg.png';
 
-const LeftPane = ({ children }) => (
-  <Wrapper backgroundImage={imgBackground}>
+const LeftPane = ({ children, signup = true }) => (
+  <Wrapper backgroundImage={signup ? imgSignup : imgLogin}>
     <div style={{ position: 'relative', height: '100%' }}>
       { children }
     </div>
@@ -13,6 +14,7 @@ const LeftPane = ({ children }) => (
 
 LeftPane.propTypes = {
   children: PropTypes.node,
+  signup: PropTypes.bool,
 };
 
 export default LeftPane;

@@ -11,7 +11,7 @@ class ButtonMenu extends React.Component {
   render() {
     return (
       <div style={{ display: 'inline-block', position: 'relative' }}>
-        <Button primary raised onClick={this.handleButtonClick} label={this.props.label} />
+        <Button primary onClick={this.handleButtonClick} label={this.props.label} />
         <Menu position="topLeft" active={this.state.active} onHide={this.handleMenuHide} onSelect={() => console.log('selected')}>
           { this.props.children }
         </Menu>

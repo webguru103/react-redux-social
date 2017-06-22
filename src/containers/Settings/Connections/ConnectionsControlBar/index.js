@@ -24,9 +24,9 @@ class ConnectionsControlBar extends React.Component {
   }
 
   render() {
-    const channelTypes = [<MenuItem value="" primaryText="All Types" key="" />];
+    const channelTypes = [<MenuItem value="" primaryText="All Channels" key="" style={{textTransform: 'capitalize'}} />];
     this.props.channels.forEach((channel) => {
-      channelTypes.push(<MenuItem value={channel} primaryText={channel} key={channel} />);
+      channelTypes.push(<MenuItem value={channel} primaryText={channel} key={channel} style={{textTransform: 'capitalize'}}/>);
     });
 
     return (
@@ -45,7 +45,7 @@ class ConnectionsControlBar extends React.Component {
           className={['col-xs-12', 'col-sm-6', 'col-md-3', 'col-lg-3', styles.noLeftPadding].join(' ')}
         >
           <div className={[styles.filterBlock, styles.channelTypeBlock].join(' ')}>
-            <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false}>
+            <PPSelectField onChange={this.setChannelType} value={this.props.channelType} underlineShow={false} style={{textTransform: 'capitalize'}}>
               { channelTypes }
             </PPSelectField>
           </div>

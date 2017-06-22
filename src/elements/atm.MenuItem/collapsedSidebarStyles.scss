@@ -1,0 +1,31 @@
+@import '~globals.scss';
+
+.menuItem {
+    background-color: transparent;
+    color: #8C9497;
+    width: 200px;
+    padding: 0;
+    margin: 0 auto;
+    height: 34px;
+    font-size: 13px;
+    &:hover {
+        background-color: #E7ECEE !important;
+    }
+}
+.caption {
+  display: none;
+}
+
+.icon {
+    text-align: center;
+    width: 100% !important;
+    i {
+        font-size: 16px !important;
+    }
+    span {
+        font-size: 20px !important;
+    }
+}
+.selected {
+    background-color: #E7ECEE !important;
+}

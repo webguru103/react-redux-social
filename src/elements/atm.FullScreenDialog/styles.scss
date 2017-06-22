@@ -1,5 +1,8 @@
 @import '~globals.scss';
 
+.active {
+    overflow-y: scroll;
+}
 .body {
     margin: 0 auto;
     width: 600px;

@@ -4,6 +4,8 @@ import React, { PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
 
+import SocialIcon from 'elements/atm.SocialIcon';
+
 import Wrapper from './Wrapper';
 import ContentWrapper from './ContentWrapper';
 import Header from './Header';
@@ -68,35 +70,47 @@ function processTwitterText(post) {
   return text;
 }
 
-function TwitterBlock({ post, index }) {
+function TwitterBlock({ post, connection, index, isPreview }) {
   return (
     <Wrapper borderTop={index === '0'}>
-      <a href={`//twitter.com/${post.user.screen_name}`} target="_blank">
-        <img className="tw-avatar" src={post.user.profile_image_url} alt="Avatar" />
-      </a>
+      {post.user.screen_name ?
+        <a href={`//twitter.com/${post.user.screen_name}`} target="_blank">
+          <img className="tw-avatar" src={post.user.profile_image_url} alt="Avatar" />
+        </a>
+      :
+        <SocialIcon icon={connection.channel_icon} />
+      }
       <ContentWrapper>
         <Header>
-          <a href={`//twitter.com/${post.user.screen_name}`} target="_blank">
-            <span className="tw-header-name">{post.user.name}</span>
-          </a>
-          <span className="tw-header-id">@{post.user.screen_name}</span>
+          {post.user.screen_name ?
+            <a href={`//twitter.com/${post.user.screen_name}`} target="_blank">
+              <span className="tw-header-name">{post.user.name}</span>
+            </a>
+          :
+            <span className="tw-header-name">{connection.display_name}</span>
+          }
+          {post.user.screen_name &&
+            <span className="tw-header-id">@{post.user.screen_name}</span>
+          }
           <span className="tw-header-dot" />
           <span className="tw-header-date">{getFormattedTime(post.created_at)}</span>
         </Header>
         <Content>
           <div className="tw-text" dangerouslySetInnerHTML={{ __html: processTwitterText(post) }} />
         </Content>
-        <Footer>
-          <div className="tw-footer-detail">
-            <i className="fa fa-retweet" aria-hidden="true"></i>
-            <span className="tw-footer-value">{post.retweet_count}</span>
-          </div>
-          <div className="tw-footer-detail">
-            <i className="fa fa-heart" aria-hidden="true"></i>
-            <span className="tw-footer-value">{post.favorite_count}</span>
-          </div>
-          <Link className="post-view-button" href={`//twitter.com/${post.user.screen_name}/status/${post.id_str}`}target="_blank" label="View" icon="open_in_new" />
-        </Footer>
+        {!isPreview &&
+          <Footer>
+            <div className="tw-footer-detail">
+              <i className="fa fa-retweet" aria-hidden="true"></i>
+              <span className="tw-footer-value">{post.retweet_count}</span>
+            </div>
+            <div className="tw-footer-detail">
+              <i className="fa fa-heart" aria-hidden="true"></i>
+              <span className="tw-footer-value">{post.favorite_count}</span>
+            </div>
+            <Link className="post-view-button" href={`//twitter.com/${post.user.screen_name}/status/${post.id_str}`}target="_blank" label="View" icon="open_in_new" />
+          </Footer>
+        }
       </ContentWrapper>
     </Wrapper>
   );
@@ -104,7 +118,9 @@ function TwitterBlock({ post, index }) {
 
 TwitterBlock.propTypes = {
   post: PropTypes.object,
+  connection: PropTypes.object,
   index: PropTypes.string,
+  isPreview: PropTypes.bool,
 };
 
 export default TwitterBlock;

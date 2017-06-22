@@ -11,7 +11,14 @@ import theme from 'theme';
 
 import { get } from 'utils/localStorage';
 
+import { resendActivationEmail } from '../actions';
+
 class SignupVerification extends Component {
+  static propTypes = {
+    location: PropTypes.object,
+    resendActivationEmail: PropTypes.func,
+  }
+
   constructor(props) {
     super(props);
 
@@ -23,17 +30,25 @@ class SignupVerification extends Component {
     };
   }
 
+  resendActivationEmail = () => {
+    const { location: { query } } = this.props;
+    this.props.resendActivationEmail({
+      email: this.state.email,
+      token: query.token,
+    });
+  }
+
   render() {
     const { name, email } = this.state;
 
     return (
       <div style={{ marginTop: '150px' }}>
         <Title>Great Job {name}</Title>
-        <CenterText style={{ marginTop: '40px' }}>Just one more thing! We have emailed an activation link to
-          &nbsp;<span style={{ color: theme.primaryColor }}>{email}</span>. Please click on the link to activate your account and start creating content today.
+        <CenterText style={{ marginTop: '40px' }}>We have emailed an activation link to
+          &nbsp;<span style={{ color: theme.primaryColor }}>{email}</span>. Please click on the link to activate your account.
         </CenterText>
         <Center style={{ marginTop: '40px' }}>Can't find your activation email?</Center>
-        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary /></Center>
+        <Center style={{ marginTop: '30px' }}><PPButton type="submit" label="Resend Activation Email" primary onClick={this.resendActivationEmail} /></Center>
       </div>
     );
   }
@@ -41,6 +56,7 @@ class SignupVerification extends Component {
 
 export function mapDispatchToProps(dispatch) {
   return {
+    resendActivationEmail: (payload) => dispatch(resendActivationEmail(payload)),
   };
 }
 

@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import FontIcon from 'react-toolbox/lib/font_icon';
+import enhanceWithClickOutside from 'react-click-outside';
 
 const PLACEHOLDER_STRING = 'Select...';
 
 const DropdownWrapper = styled.div`
   position: relative;
+  font-size: ${(props) => props.small ? '1.2rem' : 'inherit'};
 `;
 
 const DropdownLabel = styled.div`
   color: #8C9497;
+  min-height: 25px;
 `;
 
 const DropdownControl = styled.div`
@@ -24,18 +27,34 @@ const DropdownControl = styled.div`
   color: #8C9497;
   cursor: pointer;
   outline: none;
-  padding: 8px 52px 8px 10px;
+  padding: ${(props) => props.small ? '6px 40px 6px 15px' : '8px 52px 8px 10px'};
   transition: all 200ms ease;
   &:hover {
     border-color: ${(props) => props.isOpen ? '#E52466' : '#8C9497'};
+  }
+  >div {
+    span {
+      vertical-align: middle;
+    }
+    &::before {
+      vertical-align: middle;
+      display: ${(props) => props.color ? 'inline-block' : 'none'};
+      margin-right: 12px;
+      content: '';
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      background-color: ${(props) => props.color};
+    }
   }
 `;
 
 const DropdownArrow = styled.span`
   height: 36px;
   width: 20px;
-  top: 0;
-  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
   line-height: 36px;
   display: block;
   position: absolute;
@@ -79,9 +98,22 @@ const DropdownOption = styled.div`
     background-color: #E52466;
     color: white;
   }
+  span {
+    vertical-align: middle;
+  }
+  &::before {
+    vertical-align: middle;
+    display: ${(props) => props.color ? 'inline-block' : 'none'};
+    margin-right: 12px;
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background-color: ${(props) => props.color};
+  }
 `;
 
-export default class Dropdown extends React.Component {
+class Dropdown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,7 +123,6 @@ export default class Dropdown extends React.Component {
       },
       isOpen: false,
     };
-  
   }
 
   componentDidMount() {
@@ -102,10 +133,6 @@ export default class Dropdown extends React.Component {
   componentWillReceiveProps(newProps) {
     if (newProps.value && newProps.value !== this.state.selected) {
       this.setState({ selected: newProps.value });
-    } else if (!newProps.value && newProps.placeholder) {
-      this.setState({ selected: { label: newProps.placeholder, value: '' } });
-    } else {
-      this.setState({ selected: { label: PLACEHOLDER_STRING, value: '' } });
     }
   }
 
@@ -115,11 +142,12 @@ export default class Dropdown extends React.Component {
     document.removeEventListener('touchend', this.handleDocumentClick, false);
   }
 
-  setValue(value, label) {
+  setValue(value, label, color) {
     const newState = {
       selected: {
         value,
         label,
+        color,
       },
       isOpen: false,
     };
@@ -129,8 +157,8 @@ export default class Dropdown extends React.Component {
 
   handleMouseDown(event) {
     if (event.type === 'mousedown' && event.button !== 0) return;
-    event.stopPropagation();
-    event.preventDefault();
+    // event.stopPropagation();
+    // event.preventDefault();
 
     if (!this.props.disabled) {
       this.setState({
@@ -174,26 +202,35 @@ export default class Dropdown extends React.Component {
     }
   }
 
+  handleClickOutside() {
+    this.setState({ isOpen: false });
+  }
+
   renderOption(option) {
     const value = option.value || option.label || option;
     const label = option.label || option.value || option;
+    const color = option.color;
+
+    const isSelected = (option.value === this.state.selected.value) && (option.label === this.state.selected.label);
 
     return (
-      <DropdownOption key={value} isSelected={option === this.state.selected} onMouseDown={this.setValue.bind(this, value, label)} onClick={this.setValue.bind(this, value, label)}>
-        {label}
+      <DropdownOption key={value} isSelected={isSelected} onMouseDown={this.setValue.bind(this, value, label, color)} onClick={this.setValue.bind(this, value, label, color)} color={option.color}>
+        <span>{label}</span>
       </DropdownOption>
     );
   }
 
   render() {
-    const placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
-    const value = (<div>{placeHolderValue}</div>);
+    const { small, placeholder } = this.props;
+    let value = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
+    value = <div><span>{value || placeholder || PLACEHOLDER_STRING}</span></div>;
+
     const menu = this.state.isOpen ? <DropdownMenu>{this.buildMenu()}</DropdownMenu> : null;
 
     return (
-      <DropdownWrapper>
-        {this.props.label && <DropdownLabel>{this.props.label}</DropdownLabel>}
-        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)}>
+      <DropdownWrapper small={small}>
+        {this.props.label !== undefined && <DropdownLabel>{this.props.label}</DropdownLabel>}
+        <DropdownControl isOpen={this.state.isOpen} onMouseDown={this.handleMouseDown.bind(this)} onTouchEnd={this.handleMouseDown.bind(this)} small={small} color={this.state.selected.color}>
           {value}
           <DropdownArrow isOpen={this.state.isOpen}>
             { this.state.isOpen ? <FontIcon value="keyboard_arrow_up" style={{ verticalAlign: 'middle', color: '#E52466' }} /> : <FontIcon value="keyboard_arrow_down" style={{ verticalAlign: 'middle' }} /> }
@@ -209,7 +246,11 @@ Dropdown.propTypes = {
   label: React.PropTypes.string,
   options: React.PropTypes.array,
   onChange: React.PropTypes.func,
-  value: React.PropTypes.string,
+  value: React.PropTypes.any,
   placeholder: React.PropTypes.string,
   disabled: React.PropTypes.bool,
+  small: React.PropTypes.bool,
 };
+
+export default enhanceWithClickOutside(Dropdown);
+

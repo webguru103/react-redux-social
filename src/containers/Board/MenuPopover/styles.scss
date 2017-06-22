@@ -1,0 +1,39 @@
+.menuPopover {
+  position: absolute;
+  padding: 15px 18px;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 10px 0 rgba(60,92,129,0.2);
+  right: 0;
+  top: 30px;
+  white-space: nowrap;
+  color: #E81C64;
+  font-size: 14px;
+  line-height: 15px;
+  right: -28px;
+  opacity: 0;
+  pointer-events: none;
+  display: block;
+  i {
+    margin-right: 11px;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+  &:before {
+    content: " ";
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 -1px 3px 0 rgba(60,92,129,0.2);
+    width: 20px;
+    height: 20px;
+    right: 20px;
+    top: -10px;
+    transform: rotate(45deg);
+  }
+  &.active {
+    pointer-events: all;
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+}

@@ -2,6 +2,9 @@
 import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 import Link from 'react-toolbox/lib/link';
+import Linkify from 'react-linkify';
+
+import SocialIcon from 'elements/atm.SocialIcon';
 
 import Wrapper from './Wrapper';
 import Header from './Header';
@@ -25,21 +28,29 @@ class FacebookBlock extends Component {
   }
 
   render() {
-    const { post, connection } = this.props;
+    const { post, connection, isPreview } = this.props;
     const connectionUrl = `//www.facebook.com/${connection.connection_uid}`;
     return (
       <Wrapper>
         <Header>
-          <a className="fb-header-avatar" href={connectionUrl} target="_blank"><img src={post.avatar} alt="Avatar" /></a>
+          <a className="fb-header-avatar" href={connectionUrl} target="_blank">
+            {post.avatar ?
+              <img src={post.avatar} alt="Avatar" />
+            :
+              <SocialIcon icon={connection.channel_icon} />
+            }
+          </a>
           <div>
             <a className="fb-header-channel-name" href={connectionUrl} target="_blank">{connection.display_name}</a>
             <span>{getFormattedTime(post.created_time.date)}</span>
           </div>
         </Header>
         <Content>
-          <span className={`fb-message ${post.type === 'status' && 'large'}`}>{post.message}</span>
+          <Linkify properties={{ target: '_blank' }}>
+            <span className={`fb-message ${post.type === 'status' && 'large'}`}>{post.message}</span>
+          </Linkify>
 
-          { post.type === 'photo' &&
+          { (post.type === 'photo' || post.type === 'image') &&
             <img className="fb-image" src={post.full_picture} alt="feed" />
           }
 
@@ -60,11 +71,13 @@ class FacebookBlock extends Component {
             </div>
           }
         </Content>
-        <Footer>
-          <span className="fb-likes">{post.number_likes} {post.number_likes === 1 ? 'Like' : 'Likes'}</span>
-          <span>{post.number_comments} {post.number_comments === 1 ? 'Comment' : 'Comments'}</span>
-          <Link className="post-view-button" href={`//www.facebook.com/${post.id}`} target="_blank" label="View" icon="open_in_new" />
-        </Footer>
+        { !isPreview &&
+          <Footer>
+            <span className="fb-likes">{post.number_likes} {post.number_likes === 1 ? 'Like' : 'Likes'}</span>
+            <span>{post.number_comments} {post.number_comments === 1 ? 'Comment' : 'Comments'}</span>
+            <Link className="post-view-button" href={`//www.facebook.com/${post.id}`} target="_blank" label="View" icon="open_in_new" />
+          </Footer>
+        }
       </Wrapper>
     );
   }
@@ -73,6 +86,7 @@ class FacebookBlock extends Component {
 FacebookBlock.propTypes = {
   post: PropTypes.object,
   connection: PropTypes.object,
+  isPreview: PropTypes.bool,
 };
 
 export default FacebookBlock;
